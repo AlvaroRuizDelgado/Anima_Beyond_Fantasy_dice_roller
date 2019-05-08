@@ -12,7 +12,7 @@ class TestRoll(unittest.TestCase):
         #{'die_range': 100, 'difficulty': 8, 'die_roll': 12, 'victory_points': 0, 'victory_dice': 0},
         #{'die_range': 100, 'difficulty': 27, 'die_roll': 15, 'victory_points': 5, 'victory_dice': 8},
         #{'die_range': 100, 'difficulty': 20, 'die_roll': 19, 'victory_points': 0, 'victory_dice': 0},
-        {'die_range': 100, 'modifier': 30, 'difficulty': 40, 'fail_modifier': 0, 'die_roll': 60, 'roll_result': 'SUCCESS'}
+        {'die_range': 100, 'modifier': 30, 'difficulty': 40, 'fail_modifier': 0, 'die_roll': 60, 'roll_result': 'GREAT SUCCESS'}
     ]
 
     examples_d10 = [ 
