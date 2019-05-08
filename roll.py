@@ -1,5 +1,5 @@
 #!/usr/local/bin/python3
-# Last edited: 19/05/08
+# Last edited: 19/05/09
 
 import sys
 import math
@@ -45,7 +45,10 @@ def roll(argv):
             argv.pop(0)
             explode_value = die_range+1     # No explosion
         else:
-            modifier = int(argv.pop(0))
+            if (modifier == 0):
+                modifier = int(argv.pop(0))
+            else:
+                argv.pop(0)
     print("Roll type:", roll_type, "/ Modifier:", modifier, "/ Difficulty:", difficulty, "/ Fail modifier:", fail_modifier)
 
     # Show results
@@ -102,7 +105,8 @@ def roll(argv):
                   {
                     'die_range': die_range,
                     'die_roll': die_roll,
-                    'roll_result': roll_result
+                    'roll_result': roll_result,
+                    'success_level': success_level
                   }
               )
 
@@ -129,7 +133,8 @@ def roll(argv):
                   {
                     'die_range': die_range,
                     'die_roll': die_roll,
-                    'roll_result': roll_result
+                    'roll_result': roll_result,
+                    'success_level': success_level
                   }
               )
 

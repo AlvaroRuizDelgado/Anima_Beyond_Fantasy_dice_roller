@@ -1,27 +1,28 @@
+#!/usr/local/bin/python3
+# Last edited: 19/05/09
+
 from roll import roll
 import unittest
 from unittest import mock   # pylint: disable=E0611
 
 class TestRoll(unittest.TestCase):
 
-    examples_d100 = [ 
-        #{'die_range': 100, 'difficulty': 10, 'die_roll': 10, 'victory_points': 6, 'victory_dice': 6},
-        #{'die_range': 100, 'difficulty': 10, 'die_roll': 11, 'victory_points': 0, 'victory_dice': 0},
-        #{'die_range': 100, 'difficulty': 10, 'die_roll': 20, 'victory_points': 0, 'victory_dice': 0},
-        #{'die_range': 100, 'difficulty': 15, 'die_roll': 14, 'victory_points': 4, 'victory_dice': 4},
-        #{'die_range': 100, 'difficulty': 8, 'die_roll': 12, 'victory_points': 0, 'victory_dice': 0},
-        #{'die_range': 100, 'difficulty': 27, 'die_roll': 15, 'victory_points': 5, 'victory_dice': 8},
-        #{'die_range': 100, 'difficulty': 20, 'die_roll': 19, 'victory_points': 0, 'victory_dice': 0},
-        {'die_range': 100, 'modifier': 30, 'difficulty': 40, 'fail_modifier': 0, 'die_roll': 60, 'roll_result': 'GREAT SUCCESS'}
+    examples_d100 = [
+        {'die_range': 100, 'die_roll': 30, 'modifier': 30, 'difficulty': 40, 'options': ' ', 'roll_result': 'SUCCESS', 'success_level': 20},
+        {'die_range': 100, 'die_roll': 60, 'modifier': 30, 'difficulty': 40, 'options': ' ', 'roll_result': 'GREAT SUCCESS', 'success_level': 50},
+        {'die_range': 100, 'die_roll': 60, 'modifier': 60, 'difficulty': 40, 'options': ' ', 'roll_result': 'ABSOLUTE SUCCESS', 'success_level': 80},
+        {'die_range': 100, 'die_roll': 60, 'modifier': 90, 'difficulty': 40, 'options': ' ', 'roll_result': 'ABSOLUTE SUCCESS', 'success_level': 110},
+        {'die_range': 100, 'die_roll': 91, 'modifier': 40, 'difficulty': 120, 'options': ' ', 'roll_result': 'ABSOLUTE SUCCESS', 'success_level': 102},
+        {'die_range': 100, 'die_roll': 11, 'modifier': 10, 'difficulty': 40, 'options': ' ', 'roll_result': 'FAIL!', 'success_level': -19},
+        {'die_range': 100, 'die_roll': 1, 'modifier': 10, 'difficulty': 40, 'options': ' ', 'roll_result': 'FUMBLE!!', 'success_level': 1},
+        {'die_range': 100, 'die_roll': 3, 'modifier': 50, 'difficulty': 40, 'options': ' ', 'roll_result': 'FUMBLE!!', 'success_level': 3},
+        {'die_range': 100, 'die_roll': 3, 'modifier': 50, 'difficulty': 40, 'options': '-m', 'roll_result': 'SUCCESS', 'success_level': 13},
+        {'die_range': 100, 'die_roll': 20, 'modifier': -30, 'difficulty': 40, 'options': ' ', 'roll_result': 'FAIL!', 'success_level': -50},
+        {'die_range': 100, 'die_roll': 60, 'modifier': 50, 'difficulty': 80, 'options': '-r', 'roll_result': 'SUCCESS', 'success_level': 30},
+        {'die_range': 100, 'die_roll': 95, 'modifier': 30, 'difficulty': 40, 'options': '-r', 'roll_result': 'ABSOLUTE SUCCESS', 'success_level': 85}
     ]
 
-    examples_d10 = [ 
-        #{'die_range': 10, 'dice_number': 6, 'difficulty': 4, 'die_roll': 2, 'success_rolls': 6},
-        #{'die_range': 10, 'dice_number': 4, 'difficulty': 4, 'die_roll': 3, 'success_rolls': 4},
-        #{'die_range': 10, 'dice_number': 5, 'difficulty': 4, 'die_roll': 4, 'success_rolls': 5},
-        #{'die_range': 10, 'dice_number': 8, 'difficulty': 4, 'die_roll': 5, 'success_rolls': 0},
-        #{'die_range': 10, 'dice_number': 2, 'difficulty': 4, 'die_roll': 6, 'success_rolls': 0},
-        #{'die_range': 10, 'dice_number': 8, 'difficulty': 2, 'die_roll': 3, 'success_rolls': 0},
+    examples_d10 = [
         #{'die_range': 10, 'dice_number': 2, 'difficulty': 6, 'die_roll': 6, 'success_rolls': 2}
         {'die_range': 10}
     ]
@@ -55,7 +56,7 @@ class TestRoll(unittest.TestCase):
     def test_d100_test(self, mock_randint):
         for expectation in self.examples_d100:
             mock_randint.return_value = expectation['die_roll']
-            actual = roll(['d100', expectation['modifier'], '-d', expectation['difficulty']])
+            actual = roll(['d100', expectation['modifier'], '-d', expectation['difficulty'], expectation['options']])
             test_result(self, expectation, actual)
 
 #    @mock.patch('roll.randint')
@@ -73,8 +74,10 @@ class TestRoll(unittest.TestCase):
 
 def test_result(self, expectation, actual):
     self.assertEqual( expectation['die_range'],   actual['die_range'] )
-    self.assertEqual( expectation['die_roll']+expectation['modifier'],    actual['die_roll'] )
+    # self.assertEqual( expectation['die_roll']+expectation['modifier'],    actual['die_roll'] )
     self.assertEqual( expectation['roll_result'],  actual['roll_result'] )
+    self.assertEqual( expectation['success_level'],  actual['success_level'] )
+
 #    if actual['die_range'] == 100:
 #        self.assertEqual( expectation['victory_points'], actual['victory_points'] )
 #        self.assertEqual( expectation['victory_dice'],   actual['victory_dice'] )
