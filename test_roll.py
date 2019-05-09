@@ -26,7 +26,6 @@ class TestRoll(unittest.TestCase):
         {'die_range': 10, 'die_roll': 8, 'modifier': 8, 'difficulty': 15, 'options': ' ', 'roll_result': 'SUCCESS', 'success_level': 1},
         {'die_range': 10, 'die_roll': 8, 'modifier': 4, 'difficulty': 15, 'options': ' ', 'roll_result': 'FAIL!', 'success_level': -3},
         {'die_range': 10, 'die_roll': 10, 'modifier': 4, 'difficulty': 15, 'options': ' ', 'roll_result': 'SUCCESS', 'success_level': 1}
-        #{'die_range': 10, 'dice_number': 2, 'difficulty': 6, 'die_roll': 6, 'success_rolls': 2}
     ]
 
     def setUp(self):
