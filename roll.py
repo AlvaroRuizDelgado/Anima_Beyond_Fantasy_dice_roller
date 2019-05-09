@@ -41,7 +41,7 @@ def roll(argv):
         elif (argv[0] == "--master" or argv[0] == "-m"):
             argv.pop(0)
             fail_modifier = -1
-        elif (argv[0] == "--resistance" or argv[0] == "-r"):
+        elif (argv[0] == "--closed" or argv[0] == "-c"):
             argv.pop(0)
             explode_value = die_range+1     # No explosion
         else:
@@ -145,7 +145,7 @@ def print_help():
     print("Options:")
     print("  -d, --difficulty, sets the difficulty")
     print("  -m, --master, fumble threshold is reduced by 1 (i.e. '3' is not a fumble)")
-    print("  -r, --resistance, resistance check, does not use open roll")
+    print("  -c, --closed, does not use open roll (no extra-roll on 90+)")
     print("Examples:")
     print("  ./roll d100 +30 -d 120")
     print("  ./roll d100 +15 -d 80 -m")

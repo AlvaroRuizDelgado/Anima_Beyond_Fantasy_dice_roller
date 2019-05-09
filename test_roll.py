@@ -18,13 +18,15 @@ class TestRoll(unittest.TestCase):
         {'die_range': 100, 'die_roll': 3, 'modifier': 50, 'difficulty': 40, 'options': ' ', 'roll_result': 'FUMBLE!!', 'success_level': 3},
         {'die_range': 100, 'die_roll': 3, 'modifier': 50, 'difficulty': 40, 'options': '-m', 'roll_result': 'SUCCESS', 'success_level': 13},
         {'die_range': 100, 'die_roll': 20, 'modifier': -30, 'difficulty': 40, 'options': ' ', 'roll_result': 'FAIL!', 'success_level': -50},
-        {'die_range': 100, 'die_roll': 60, 'modifier': 50, 'difficulty': 80, 'options': '-r', 'roll_result': 'SUCCESS', 'success_level': 30},
-        {'die_range': 100, 'die_roll': 95, 'modifier': 30, 'difficulty': 40, 'options': '-r', 'roll_result': 'ABSOLUTE SUCCESS', 'success_level': 85}
+        {'die_range': 100, 'die_roll': 60, 'modifier': 50, 'difficulty': 80, 'options': '-c', 'roll_result': 'SUCCESS', 'success_level': 30},
+        {'die_range': 100, 'die_roll': 95, 'modifier': 30, 'difficulty': 40, 'options': '-c', 'roll_result': 'ABSOLUTE SUCCESS', 'success_level': 85}
     ]
 
     examples_d10 = [
+        {'die_range': 10, 'die_roll': 8, 'modifier': 8, 'difficulty': 15, 'options': ' ', 'roll_result': 'SUCCESS', 'success_level': 1},
+        {'die_range': 10, 'die_roll': 8, 'modifier': 4, 'difficulty': 15, 'options': ' ', 'roll_result': 'FAIL!', 'success_level': -3},
+        {'die_range': 10, 'die_roll': 10, 'modifier': 4, 'difficulty': 15, 'options': ' ', 'roll_result': 'SUCCESS', 'success_level': 1}
         #{'die_range': 10, 'dice_number': 2, 'difficulty': 6, 'die_roll': 6, 'success_rolls': 2}
-        {'die_range': 10}
     ]
 
     def setUp(self):
@@ -53,36 +55,43 @@ class TestRoll(unittest.TestCase):
         self.assertTrue(mock_randint.called)
 
     @mock.patch('roll.randint')
+    def test_d100_bad_fumble(self, mock_randint):
+        mock_randint.side_effect = [1, 60]
+        actual = roll(['d100'])
+        self.assertEqual( "BAD FUMBLE!!",  actual['roll_result'] )
+        self.assertEqual( 60,  actual['success_level'] )
+
+    @mock.patch('roll.randint')
+    def test_d100_tragic_fumble(self, mock_randint):
+        mock_randint.side_effect = [1, 99]
+        actual = roll(['d100'])
+        self.assertEqual( "TRAGIC FUMBLE!!",  actual['roll_result'] )
+        self.assertEqual( 99,  actual['success_level'] )
+
+    @mock.patch('roll.randint')
     def test_d100_test(self, mock_randint):
         for expectation in self.examples_d100:
             mock_randint.return_value = expectation['die_roll']
             actual = roll(['d100', expectation['modifier'], '-d', expectation['difficulty'], expectation['options']])
             test_result(self, expectation, actual)
 
-#    @mock.patch('roll.randint')
-#    def test_d10_working_mock(self, mock_randint):
-#        mock_randint.return_value = 10
-#        roll(['d10', 7])
-#        self.assertTrue(mock_randint.called)
+    @mock.patch('roll.randint')
+    def test_d10_working_mock(self, mock_randint):
+        mock_randint.return_value = 10
+        roll(['d10', 7])
+        self.assertTrue(mock_randint.called)
 
-#    @mock.patch('roll.randint')
-#    def test_d10_test(self, mock_randint):
-#        for expectation in self.examples_d6:
-#            mock_randint.return_value = expectation['die_roll']
-#            actual = roll(['d10', expectation['dice_number'], '-d', expectation['difficulty']])
-#            test_result(self, expectation, actual)
+    @mock.patch('roll.randint')
+    def test_d10_test(self, mock_randint):
+        for expectation in self.examples_d10:
+            mock_randint.return_value = expectation['die_roll']
+            actual = roll(['d10', expectation['modifier'], '-d', expectation['difficulty']])
+            test_result(self, expectation, actual)
 
 def test_result(self, expectation, actual):
     self.assertEqual( expectation['die_range'],   actual['die_range'] )
-    # self.assertEqual( expectation['die_roll']+expectation['modifier'],    actual['die_roll'] )
     self.assertEqual( expectation['roll_result'],  actual['roll_result'] )
     self.assertEqual( expectation['success_level'],  actual['success_level'] )
-
-#    if actual['die_range'] == 100:
-#        self.assertEqual( expectation['victory_points'], actual['victory_points'] )
-#        self.assertEqual( expectation['victory_dice'],   actual['victory_dice'] )
-#    elif actual['die_range'] == 10:
-#        self.assertEqual( expectation['success_rolls'], actual['success_rolls'] )
 
 if __name__ == '__main__':
     unittest.main()
