@@ -68,7 +68,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            container_tag=$DOCKER_USER"/anima_dice"
+            container_tag="${DOCKER_USER}/anima_dice"
             docker build -t $container_tag .
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push $container_tag
