@@ -1,0 +1,87 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            coverage run test_roll.py
+            coverage html
+
+      - store_artifacts:
+          path: htmlcov
+          destination: test-coverage
+
+  docker-upload:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install docker
+          command: |
+            sudo apt-get install docker
+
+      - run:
+          name: build and push container
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            container_tag=$DOCKER_USER"/anima_dice"
+            docker build -t $container_tag .
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push $container_tag
+
+workflows:
+  version: 2
+  test-and-upload-container:
+    jobs:
+      - test
+      - docker-upload:
+          requires:
+            - test
+          # filters:
+          #   branches:
+          #     only:
+          #       - master
