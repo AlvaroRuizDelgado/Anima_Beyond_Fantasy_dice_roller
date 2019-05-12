@@ -1,6 +1,6 @@
 # Anima Beyond Fantasy 2E dice roller
 
-[![CircleCI](https://circleci.com/gh/AlvaroRuizDelgado/Fading_Suns_dice_roller.svg?style=svg)](https://circleci.com/gh/AlvaroRuizDelgado/Fading_Suns_dice_roller)
+[![CircleCI](https://circleci.com/gh/AlvaroRuizDelgado/Anima_Beyond_Fantasy_dice_roller.svg?style=svg)](https://circleci.com/gh/AlvaroRuizDelgado/Anima_Beyond_Fantasy_dice_roller)
 
 Script to roll dice for the 2nd editions of the roleplaying game.
 
